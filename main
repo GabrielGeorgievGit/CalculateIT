@@ -1,0 +1,156 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+import cf.cf;
+public class CalculateIT {
+
+	public static void Functions() {
+		System.out.println("Choose:\n" +
+				"1 - chislo\n" +
+				"2 - kys\n" +
+				"3 - K\n");
+	}
+	public static LinkedList<String> Nacepin(String result) {
+		String str = "";
+		char[] a = new char[result.length()];
+		LinkedList<String>parts = new LinkedList<String>();
+		for (int i = 0; i < result.length(); i++)
+			a[i] = result.charAt(i);
+		@SuppressWarnings("unused")
+		char lastSign = 0;//better not delete this
+		int lastIndex = 0;
+		for (int i = 0; i < result.length() - 1; i++) {
+			str += a[i];
+			for(int k = result.length()-1;k > 0;k--)
+			{
+				if(a[k] == '+')
+				{
+					lastSign = '+';//and this
+					lastIndex = k;
+					break;
+				}
+				if(a[k] == '-') 
+				{
+					lastSign = '-';//and this
+					lastIndex = k;
+					break;
+				}
+			}
+			if(a[i+1] == '+' || a[i+1] == '-') {
+				parts.add(str);
+				str = "";
+			}
+			if(i == lastIndex)
+			{
+				str = "";
+				for(int o = lastIndex; o < result.length(); o++)
+					str += a[o];
+				parts.add(str);
+			}
+		}
+		return parts;
+	}
+	public static int addSign(String str) {
+		int sign = 1;
+		char[] a = str.toCharArray();
+		if(a[0] == '+' || a[0] == '-') 
+		{
+			if(a[0] == '-')sign = -1;
+		}
+		return sign;
+	}
+	public static String addSignS(String str) {
+		String sign = "";
+		char[] a = str.toCharArray();
+		if(a[0] == '+' || a[0] == '-') 
+		{
+			if(a[0] == '-')sign = "-";
+		}
+		return sign;
+	}
+	public static double indexed(String izraz) {
+		double index = 0;
+		char[] a = new char[izraz.length()];
+		a = izraz.toCharArray();
+		int sign = 1;
+		if(a[0] == '+' || a[0] == '-') 
+		{
+			if(a[0] == '-')sign = -1;
+			a[0] = ' ';
+		}
+		char[] numbers ={'1','2','3','4','5','6','7','8','9','0','.'};
+		String indexing = "";
+		int breaker = 0;
+		for(int i = 0; i < a.length; i++)
+		{
+			if(a[i] == '^')break;
+			if(breaker > 0)break;
+			for(int j = 0; j < numbers.length; j++)
+			{
+				if(a[i] == numbers[j])
+				{
+					indexing += a[i];
+					breaker = 0;
+					break;//VAZNO
+				}
+				else 
+					if(a[i] != '+' && a[i] != '-' && a[i] != ' ')
+						breaker++;
+					else breaker = 0;
+			}
+			if(breaker > 0)break;
+		}
+		System.out.println(indexing);//das
+		index = Double.valueOf(indexing);
+		return index*sign;
+	}
+	public static String variableFind(String str) {
+		if(str == "")
+		{
+			System.out.println("");
+			return str;
+		}
+		String variable = "";
+		String sign = addSignS(str);
+		char[] a = str.toCharArray();
+		String Letters = 
+				"xyXYabcdefghijklmnopqrstuvwzABCDEFGHIJKLMNOPQRSTUVWZ";
+		char[] letters = Letters.toCharArray();
+		if(a[0] == '+' || a[0] == '-') a[0] = ' ';
+		int breaker = 0;
+		for(int i = 0; i < a.length; i++)
+		{
+			if(a[i] == ' ')continue;
+			if(breaker > 0)
+			{
+				variable += a[i];
+				continue;
+			}
+			for(int j = 0; j < letters.length; j++)
+			{
+				if(a[i] == letters[j])
+				{
+					variable += a[i];
+					breaker++;
+					break;
+				}
+			}
+		}
+		return sign + variable;
+	}
+	public static void main(String[] args) {
+		System.out.println(variableFind("785x^113"));
+		System.out.println("indexed: " + indexed("-71.8x35634"));
+		LinkedList<String>chasti = new LinkedList<>();
+		System.out.println("Vuvedi izraz:");
+		Scanner scan = new Scanner(System.in);
+		String izraz = "5x - 12^x + 42";//scan.next();
+		chasti = Nacepin(izraz);
+		System.out.printf("%n %10s %10s %n","chast:","izraz:");
+		for(int i = 1; i <= chasti.size(); i++)
+			cf.squaredAdd(chasti.get(i-1),"","      " +
+						Integer.toString(i)+"        ");
+		System.out.println("Izberi izraz: ");
+		
+		scan.close();
+	}
+}
