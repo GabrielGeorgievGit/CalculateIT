@@ -3,11 +3,14 @@ import java.util.Scanner;
 import cf.cf;
 public class CalculateIT {
 
-	public static void Functions() {
-		System.out.println("Choose:\n" +
-				"1 - chislo\n" +
-				"2 - kys\n" +
-				"3 - K\n");
+	public static void Functions(String izraz) {
+		System.out.println("Izberi funkciq za izraza:"+izraz+" \n" +
+				"1 - pokazi pulniq izraz\n" +
+				"2 - pokazi znak\n" +
+				"3 - pokazi index\n" + 
+				"4 - pokazi promenliva\n" + 
+				"5 - subirane");
+		System.out.print("Funkciq: ");
 	}
 	public static LinkedList<String> Nacepin(String result) {
 		String str = "";
@@ -99,11 +102,11 @@ public class CalculateIT {
 			}
 			if(breaker > 0)break;
 		}
-		System.out.println(indexing);//das
+		//System.out.println(indexing);//das
 		index = Double.valueOf(indexing);
 		return index*sign;
 	}
-	public static String variableFind(String str) {
+	public static String variableFind(String str, boolean SIGN) {
 		if(str == "")
 		{
 			System.out.println("");
@@ -135,22 +138,130 @@ public class CalculateIT {
 				}
 			}
 		}
-		return sign + variable;
+		if(variable == "")return "";
+		if(SIGN)variable = sign + variable;
+		return variable;
+	}
+	public static String compression(String izraz1, String izraz2) {
+		String result = "";
+		String var = "";
+		
+		double index;
+		if(variableFind(izraz1,false).
+				equals(variableFind(izraz2,false)))
+		{
+				var = variableFind(izraz1,false);
+				index = indexed(izraz1) + indexed(izraz2);
+		}
+		else 
+		{
+			System.out.println(izraz1 + 
+					" nemoze da se subere s " + izraz2);
+			return "";
+		}
+		result = Double.toString(index) + var;
+		return result;
+	}
+	public static LinkedList<String>PartRemover(
+			LinkedList<String> newList,String indexes,String add) {
+		
+		char[] indexch = indexes.toCharArray();
+		int[] index = new int[indexch.length];
+		
+		for(int i = 0; i < index.length; i++)
+			index[i] = 
+				Integer.parseInt(Character.toString(indexch[i]));
+		
+		int addIndex = index[0];
+		
+		for(int i = index.length-1; i >= 0; i--)
+			newList.remove(index[i]);
+		
+		newList.add(addIndex, add);
+		
+		return newList;
+	}
+	public static void izrazF(String str,String chast) {
+		System.out.print(str + " na izraza " + 
+				chast + " e: ");
+	}
+	public static void izraz2F(String str,String chast1,String chast2) {
+		System.out.println(str + " na izraza " + 
+				chast1 + " i izraza "+chast2 + " e: ");
 	}
 	public static void main(String[] args) {
-		System.out.println(variableFind("785x^113"));
-		System.out.println("indexed: " + indexed("-71.8x35634"));
-		LinkedList<String>chasti = new LinkedList<>();
-		System.out.println("Vuvedi izraz:");
-		Scanner scan = new Scanner(System.in);
-		String izraz = "5x - 12^x + 42";//scan.next();
-		chasti = Nacepin(izraz);
-		System.out.printf("%n %10s %10s %n","chast:","izraz:");
-		for(int i = 1; i <= chasti.size(); i++)
-			cf.squaredAdd(chasti.get(i-1),"","      " +
-						Integer.toString(i)+"        ");
-		System.out.println("Izberi izraz: ");
+		boolean running = true;
 		
+		Scanner scan = new Scanner(System.in);
+		String izraz = "5x - 12^x + 42 + 5";//scan.next();
+
+		System.out.println("Vuvedi izraz:");
+		LinkedList<String>chasti = Nacepin(izraz);
+		while(running)
+		{
+				
+		
+			System.out.printf("%n %10s %10s %n","chast:","izraz:");
+			for(int i = 1; i <= chasti.size(); i++)
+				cf.squaredAdd(chasti.get(i-1),"","      " +
+							Integer.toString(i)+"        ");
+			System.out.print("Izberi izraz: ");
+			int chast = scan.nextInt();
+			int index = chast - 1;
+			//System.out.println("izbran izrazZZZZZ: " + chasti.get(index));
+			Functions(chasti.get(index));
+			int function = scan.nextInt();
+			String using = chasti.get(index);
+			switch(function)
+			{
+				case 1: 
+					System.out.println("Пълен израз: " + izraz);
+					break;
+					
+				case 2: 
+					izrazF("Znaka",using);
+					if(addSign(using) == -1)
+						System.out.print("-");
+					else System.out.print("+");
+					break;
+					
+				case 3: 
+					izrazF("Indexa",using);
+					System.out.println(indexed(using));
+					break;
+					
+				case 4: 
+					izrazF("Promenlivata",using);
+					System.out.println(indexed(using));
+					break;
+					
+				case 5:
+					System.out.println("izbran izraz: " + using);
+					System.out.print("izberi vtori izraz: ");
+					
+					int index2 = scan.nextInt() - 1;
+					
+					String using2 = chasti.get(index2);
+					System.out.println("izbran vtori izraz: " + using2);
+					izraz2F("Subiraneto",using,using2);
+					
+					String compress = compression(using,using2);
+					
+					System.out.print(compress);
+					
+					String indexes = 
+							Integer.toString(index) +
+							Integer.toString(index2);
+					
+					chasti = PartRemover(chasti,indexes,compress);
+					
+					System.out.print(chasti);
+					break;
+					
+				case 69: return;
+			}
+			
+		}
 		scan.close();
 	}
 }
