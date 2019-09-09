@@ -1,0 +1,70 @@
+package cf;
+
+
+public class cf {
+	public static void centerString(String s) {
+	    int width = 47;
+	    
+	    int padSize = width - s.length();
+	    int padStart = s.length() + padSize / 2;
+
+	    s = String.format("%" + padStart + "s", s);
+	    s = String.format("%-" + width  + "s", s);
+
+	   System.out.println(s);
+	}
+	public static void squared(String s,String check) {
+		s = "| " + s;
+		s = s + " |";
+		String updown = "";
+		for(int i = 0; i < s.length(); i++)
+		{
+			updown += "-";
+		}
+		if(check == "cs")
+		{
+			centerString(updown);
+			centerString(s);
+			centerString(updown);
+		}
+		else
+		{
+			System.out.println(updown);
+			System.out.println(s);
+			System.out.println(updown);			
+		}
+	}
+	public static void squaredCS(String s) {
+		s = "| " + s;
+		s = s + " |";
+		String updown = "";
+		for(int i = 0; i < s.length(); i++)
+		{
+			updown += "-";
+		}
+		System.out.println(updown);
+		System.out.println(s);
+		System.out.println(updown);
+	}
+	public static void squaredAdd(String s,String check, String added) {
+		s = added + "| " + s;
+		s = s + " |";
+		String updown = "";
+		for(int i = 0; i < s.length(); i++)
+		{
+			updown += "-";
+		}
+		if(check == "cs")
+		{
+			centerString(updown);
+			centerString(s);
+			centerString(updown);
+		}
+		else
+		{
+			System.out.println(updown);
+			System.out.println(s);
+			System.out.println(updown);			
+		}
+	}
+}
